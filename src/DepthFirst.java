@@ -3,22 +3,24 @@ import java.util.Collections;
 import java.util.Random;
 import java.util.Stack;
 
-class DepthFirst {
+class DepthFirst extends Search {
+
+    private Stack<Node> stack;
+    private Random rand;
 
     DepthFirst(Node root) {
-        Random rand = new Random();
-        int nodesExpanded = 0;
-        Stack<Node> stack = new Stack<>();
+        initialise(root);
+        stack = new Stack<>();
+        rand = new Random();
+    }
 
-        root.setVisited();
+    @Override
+    Node run() {
         // Push the root node to the stack
         stack.push(root);
-        boolean goal = false;
 
-        while (!stack.isEmpty() && !goal) {
+        while (!stack.isEmpty()) {
             Node current = stack.pop();
-            current.drawPuzzle();
-
             current.generateChildren();
 
             // Randomly shuffle the children - this avoids getting stuck
@@ -28,11 +30,9 @@ class DepthFirst {
             // Iterate through the children
             for (Node child : children) {
                 nodesExpanded ++;
-                child.drawPuzzle();
-
                 if (child.isGoal()) {
-                    goal = true;
-                    break;
+                    printNodesExpanded();
+                    return child;
                 }
 
                 if (!child.getVisited()) {
@@ -41,6 +41,7 @@ class DepthFirst {
                 }
             }
         }
-        System.out.println("Expanded: " + nodesExpanded + " nodes");
+        // Return null if the goal state is not found in the tree
+        return null;
     }
 }

@@ -1,33 +1,40 @@
-public class IterativeDeepening {
+class IterativeDeepening extends Search {
 
-    private int nodesExpanded = 0;
+    private int maxDepth;
 
-    IterativeDeepening(Node root, int limit) {
-        for (int i = 0; i <= limit; i++) {
-            if (search(root, i)) {
-                System.out.println(nodesExpanded);
-                return;
-            }
-        }
+    IterativeDeepening(Node root, int maxDepth) {
+        initialise(root);
+        this.maxDepth = maxDepth;
     }
 
-    private boolean search(Node current, int limit) {
-        if (current.isGoal()) return true;
+    @Override
+    Node run() {
+        for (int i = 0; i <= maxDepth; i++) {
+            Node node = search(root, i);
+            if (node != null) {
+                printNodesExpanded();
+                node.drawPuzzle();
+                return node;
+            }
+        }
+        return null;
+    }
 
-        if (limit <= 0) return false;
+    private Node search(Node current, int limit) {
+        if (current.isGoal()) return current;
 
-        current.drawPuzzle();
+        if (limit <= 0) return null;
 
         current.generateChildren();
 
         for (Node child : current.getChildren()) {
             nodesExpanded ++;
-            child.drawPuzzle();
 
-            if (search(child, limit-1)) {
-                return true;
+            Node node = search(child, limit - 1);
+            if (node != null) {
+                return node;
             }
         }
-        return false;
+        return null;
     }
 }

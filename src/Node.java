@@ -6,16 +6,18 @@ import java.util.ArrayList;
 class Node {
 
     static final int SIZE = 2;
+    private Node parent;
     private ArrayList<Node> children = new ArrayList<>();
     private String[][] puzzle;
     //Store the location of the actor
     private int x, y;
     private Boolean visited;
 
-    Node(String[][] puzzle, int agentX, int agentY) {
+    Node(String[][] puzzle, int agentX, int agentY, Node parent) {
         this.puzzle = puzzle;
         this.x = agentX;
         this.y = agentY;
+        this.parent = parent;
         visited = false;
     }
 
@@ -28,6 +30,10 @@ class Node {
 
     ArrayList<Node> getChildren() {
         return children;
+    }
+
+    Node getParent() {
+        return parent;
     }
 
     void setVisited() {
@@ -71,7 +77,7 @@ class Node {
              newPuzzle[x][y] = newPuzzle[x + 1][y];
              newPuzzle[x + 1][y] = temp;
              // Create the new node
-             child = new Node(newPuzzle, x + 1, y);
+             child = new Node(newPuzzle, x + 1, y, this);
              children.add(child);
 
          } else if (direction == 'l' && x - 1 >= 0) {
@@ -79,7 +85,7 @@ class Node {
              newPuzzle[x][y] = newPuzzle[x - 1][y];
              newPuzzle[x - 1][y] = temp;
              // Create the new node
-             child = new Node(newPuzzle, x - 1, y);
+             child = new Node(newPuzzle, x - 1, y, this);
              children.add(child);
 
          } else if (direction == 'u' && y - 1 >= 0) {
@@ -87,7 +93,7 @@ class Node {
              newPuzzle[x][y] = newPuzzle[x][y - 1];
              newPuzzle[x][y - 1] = temp;
              // Create the new node
-             child = new Node(newPuzzle, x, y - 1);
+             child = new Node(newPuzzle, x, y - 1, this);
              children.add(child);
 
          } else if (direction == 'd' && y + 1 <= SIZE - 1) {
@@ -95,7 +101,7 @@ class Node {
              newPuzzle[x][y] = newPuzzle[x][y + 1];
              newPuzzle[x][y + 1] = temp;
              // Create the new node
-             child = new Node(newPuzzle, x, y + 1);
+             child = new Node(newPuzzle, x, y + 1, this);
              children.add(child);
          }
     }

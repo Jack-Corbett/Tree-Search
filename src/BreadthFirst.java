@@ -1,30 +1,30 @@
 import java.util.LinkedList;
 import java.util.Queue;
 
-class BreadthFirst {
+class BreadthFirst extends Search {
+
+    private Queue<Node> queue;
 
     BreadthFirst(Node root) {
-        int nodesExpanded = 0;
-        Queue<Node> queue = new LinkedList<>();
+        initialise(root);
+        queue = new LinkedList<>();
+    }
 
-        root.setVisited();
+    @Override
+    Node run() {
+        // Push the root node to the queue
         queue.add(root);
-        boolean goal = false;
 
-        while (!queue.isEmpty() && !goal) {
+        while (!queue.isEmpty()) {
             Node current = queue.poll();
-            current.drawPuzzle();
-
             current.generateChildren();
 
             // Iterate through the children
             for (Node child : current.getChildren()) {
                 nodesExpanded ++;
-                child.drawPuzzle();
-
                 if (child.isGoal()) {
-                    goal = true;
-                    break;
+                    printNodesExpanded();
+                    return child;
                 }
 
                 if (!child.getVisited()) {
@@ -33,6 +33,7 @@ class BreadthFirst {
                 }
             }
         }
-        System.out.println("Expanded: " + nodesExpanded + " nodes");
+        // Return null if the goal state is not found in the tree
+        return null;
     }
 }
