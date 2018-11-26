@@ -8,6 +8,7 @@ class BreadthFirst extends Search {
     BreadthFirst(Node root) {
         initialise(root);
         queue = new LinkedList<>();
+        printName();
     }
 
     @Override
@@ -17,23 +18,26 @@ class BreadthFirst extends Search {
 
         while (!queue.isEmpty()) {
             Node current = queue.poll();
+
+            if (current.isGoal()) {
+                printNodesExpanded();
+                printLevel(current);
+                return current;
+            }
+            nodesExpanded ++;
             current.generateChildren();
 
-            // Iterate through the children
-            for (Node child : current.getChildren()) {
-                nodesExpanded ++;
-                if (child.isGoal()) {
-                    printNodesExpanded();
-                    return child;
-                }
-
-                if (!child.getVisited()) {
-                    child.setVisited();
-                    queue.add(child);
-                }
-            }
+            // Add the children to the queue
+            queue.addAll(current.getChildren());
         }
         // Return null if the goal state is not found in the tree
         return null;
+    }
+
+    @Override
+    void printName() {
+        System.out.println();
+        System.out.println("--------------------------------");
+        System.out.println("Breadth First");
     }
 }

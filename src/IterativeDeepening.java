@@ -1,40 +1,55 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Stack;
+
 class IterativeDeepening extends Search {
 
-    private int maxDepth;
+    private int depthLimit;
+    private Stack<Node> stack;
 
-    IterativeDeepening(Node root, int maxDepth) {
+    IterativeDeepening(Node root) {
         initialise(root);
-        this.maxDepth = maxDepth;
+        depthLimit = 0;
+        stack = new Stack<>();
+        printName();
     }
 
     @Override
     Node run() {
-        for (int i = 0; i <= maxDepth; i++) {
-            Node node = search(root, i);
-            if (node != null) {
+        // Push the root node to the stack
+        stack.push(root);
+
+        while (!stack.isEmpty()) {
+            Node current = stack.pop();
+            if (current.isGoal()) {
                 printNodesExpanded();
-                node.drawPuzzle();
-                return node;
+                printLevel(current);
+                return current;
+            } else if (current.getLevel() < depthLimit) {
+                nodesExpanded ++;
+                current.generateChildren();
+                // Randomly shuffle the children - this avoids getting stuck
+                ArrayList<Node> children = current.getChildren();
+                Collections.shuffle(children);
+
+                // Iterate through the children and push them to the stack
+                for (Node child : children) {
+                    stack.push(child);
+                }
+            }
+            if (stack.isEmpty()) {
+                stack.push(root);
+                depthLimit++;
             }
         }
+        // Return null if the goal state is not found in the tree
         return null;
     }
 
-    private Node search(Node current, int limit) {
-        if (current.isGoal()) return current;
-
-        if (limit <= 0) return null;
-
-        current.generateChildren();
-
-        for (Node child : current.getChildren()) {
-            nodesExpanded ++;
-
-            Node node = search(child, limit - 1);
-            if (node != null) {
-                return node;
-            }
-        }
-        return null;
+    @Override
+    void printName() {
+        System.out.println();
+        System.out.println("--------------------------------");
+        System.out.println("Iterative Deepening");
     }
 }

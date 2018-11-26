@@ -1,12 +1,25 @@
-import java.io.Console;
 import java.util.Scanner;
 
 /**
- * Main class responsible for starting the tests
+ * Main class responsible for running the search algorithms on blocks world
+ * @author Jack Corbett
  */
 class Main {
 
-    private Scanner in = new Scanner(System.in);
+    // Configuration Settings
+    static final int SIZE = 4;
+    // Goal coordinates of A, B and C
+    static final int Ax = 1;
+    static final int Ay = 1;
+    static final int Bx = 2;
+    static final int By = 1;
+    static final int Cx = 3;
+    static final int Cy = 1;
+    // Initial agent position
+    private static final int agentX = 1;
+    private static final int agentY = 0;
+
+    private Scanner in;
     private Node startNode;
 
     /**
@@ -17,44 +30,50 @@ class Main {
     }
 
     private Main() {
-        int choice = menu();
-        setStartState();
+        in = new Scanner(System.in);
+        while (true) {
+            int choice = menu();
+            setStartState();
 
-        Node goal = null;
-        switch (choice) {
-            case 1:
-                BreadthFirst bf = new BreadthFirst(startNode);
-                goal = bf.run();
-                break;
-            case 2:
-                DepthFirst df = new DepthFirst(startNode);
-                goal = df.run();
-                break;
-            case 3:
-                IterativeDeepening id = new IterativeDeepening(startNode, 100);
-                goal = id.run();
-                break;
-            case 4:
-                //
-                break;
+            Node goal = null;
+            switch (choice) {
+                case 1:
+                    BreadthFirst bf = new BreadthFirst(startNode);
+                    goal = bf.run();
+                    break;
+                case 2:
+                    DepthFirst df = new DepthFirst(startNode);
+                    goal = df.run();
+                    break;
+                case 3:
+                    IterativeDeepening id = new IterativeDeepening(startNode);
+                    goal = id.run();
+                    break;
+                case 4:
+                    AStar as = new AStar(startNode);
+                    goal = as.run();
+                    break;
+                case 5:
+                    System.exit(0);
+            }
+            printTrace(goal);
         }
-        printTrace(goal);
     }
 
     /**
      * Sets initial board state and generates the root node
      */
     private void setStartState() {
-        String[][] puzzle = new String[Node.SIZE][Node.SIZE];
+        String[][] puzzle = new String[SIZE][SIZE];
 
         //Place the tower blocks
-        puzzle[0][0] = "A";
-        //puzzle[3][1] = "B";
-        //puzzle[3][2] = "C";
+        puzzle[0][1] = "A";
+        puzzle[2][1] = "B";
+        puzzle[3][1] = "C";
         //Place the agent
-        puzzle[1][1] = "*";
+        puzzle[agentX][agentY] = "*";
 
-        startNode = new Node(puzzle, 1, 1, null);
+        startNode = new Node(puzzle, agentX, agentY, null, 0);
     }
 
     /**
@@ -72,6 +91,7 @@ class Main {
         System.out.println("2. Depth First");
         System.out.println("3. Iterative Deepening");
         System.out.println("4. A*");
+        System.out.println("5. Quit");
         System.out.print("Input: ");
         return in.nextInt();
     }
@@ -81,6 +101,7 @@ class Main {
      * @param bottom The node we want to work back up the tree from
      */
     private void printTrace(Node bottom) {
+        int count = 0;
         System.out.println();
         System.out.println("The moves (working back from the goal) were: ");
         System.out.println();
@@ -88,6 +109,11 @@ class Main {
         node.drawPuzzle();
         Node parent;
         while (node.getParent() != null) {
+            count++;
+            if (count > 10) {
+                System.out.println("Only showing the first 10 moves...");
+                return;
+            }
             parent = node.getParent();
             parent.drawPuzzle();
             node = parent;

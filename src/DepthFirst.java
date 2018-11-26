@@ -1,17 +1,15 @@
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Random;
 import java.util.Stack;
 
 class DepthFirst extends Search {
 
     private Stack<Node> stack;
-    private Random rand;
 
     DepthFirst(Node root) {
         initialise(root);
         stack = new Stack<>();
-        rand = new Random();
+        printName();
     }
 
     @Override
@@ -21,27 +19,30 @@ class DepthFirst extends Search {
 
         while (!stack.isEmpty()) {
             Node current = stack.pop();
+            if (current.isGoal()) {
+                printNodesExpanded();
+                printLevel(current);
+                return current;
+            }
+            nodesExpanded ++;
             current.generateChildren();
-
             // Randomly shuffle the children - this avoids getting stuck
             ArrayList<Node> children = current.getChildren();
-            Collections.shuffle(children, rand);
+            Collections.shuffle(children);
 
-            // Iterate through the children
+            // Iterate through the children and push them to the stack
             for (Node child : children) {
-                nodesExpanded ++;
-                if (child.isGoal()) {
-                    printNodesExpanded();
-                    return child;
-                }
-
-                if (!child.getVisited()) {
-                    child.setVisited();
                     stack.push(child);
-                }
             }
         }
         // Return null if the goal state is not found in the tree
         return null;
+    }
+
+    @Override
+    void printName() {
+        System.out.println();
+        System.out.println("--------------------------------");
+        System.out.println("Depth First");
     }
 }
