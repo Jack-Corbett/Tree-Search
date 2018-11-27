@@ -1,6 +1,7 @@
 import java.util.LinkedList;
 import java.util.Queue;
 
+@SuppressWarnings("Duplicates")
 class BreadthFirst extends Search {
 
     private Queue<Node> queue;
@@ -24,11 +25,18 @@ class BreadthFirst extends Search {
                 printLevel(current);
                 return current;
             }
+            System.out.println("Removing:");
+            current.drawPuzzle();
             nodesExpanded ++;
             current.generateChildren();
 
             // Add the children to the queue
-            queue.addAll(current.getChildren());
+            System.out.println("Expanding:");
+            for (Node child : current.getChildren()) {
+                child.drawPuzzle();
+                queue.add(child);
+            }
+            //queue.addAll(current.getChildren());
         }
         // Return null if the goal state is not found in the tree
         return null;
@@ -36,8 +44,7 @@ class BreadthFirst extends Search {
 
     @Override
     void printName() {
-        System.out.println();
-        System.out.println("--------------------------------");
+        super.printName();
         System.out.println("Breadth First");
     }
 }

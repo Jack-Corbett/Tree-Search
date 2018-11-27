@@ -78,8 +78,7 @@ class AStar extends Search {
 
     @Override
     void printName() {
-        System.out.println();
-        System.out.println("--------------------------------");
+        super.printName();
         System.out.println("A*");
     }
 }

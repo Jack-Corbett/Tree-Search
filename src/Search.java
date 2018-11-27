@@ -10,7 +10,10 @@ abstract class Search {
 
     abstract Node run();
 
-    abstract void printName();
+    void printName() {
+        System.out.println();
+        System.out.println("--------------------------------");
+    }
 
     void printNodesExpanded() {
         System.out.println("Expanded: " + nodesExpanded + " nodes");

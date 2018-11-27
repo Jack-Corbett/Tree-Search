@@ -11,13 +11,13 @@ class Main {
     // Goal coordinates of A, B and C
     static final int Ax = 1;
     static final int Ay = 1;
-    static final int Bx = 2;
-    static final int By = 1;
-    static final int Cx = 3;
-    static final int Cy = 1;
+    static final int Bx = 1;
+    static final int By = 2;
+    static final int Cx = 1;
+    static final int Cy = 3;
     // Initial agent position
     private static final int agentX = 1;
-    private static final int agentY = 0;
+    private static final int agentY = 1;
 
     private Scanner in;
     private Node startNode;
@@ -71,9 +71,9 @@ class Main {
         puzzle[2][1] = "B";
         puzzle[3][1] = "C";
         //Place the agent
-        puzzle[agentX][agentY] = "*";
+        puzzle[agentY][agentX] = "*";
 
-        startNode = new Node(puzzle, agentX, agentY, null, 0);
+        startNode = new Node(puzzle, agentY, agentX, null, 0);
     }
 
     /**
@@ -97,7 +97,7 @@ class Main {
     }
 
     /**
-     * Prints the state of the board working up through the tree to the root
+     * Prints the state of the board working up through the tree to the root to a maximum of 10
      * @param bottom The node we want to work back up the tree from
      */
     private void printTrace(Node bottom) {
