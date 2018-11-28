@@ -16,11 +16,10 @@ class Main {
     static final int Cx = 1;
     static final int Cy = 3;
     // Initial agent position
-    private static final int agentX = 1;
-    private static final int agentY = 1;
+    private static final int agentX = 3;
+    private static final int agentY = 3;
 
     private Scanner in;
-    private Node startNode;
 
     /**
      * Start the program
@@ -29,11 +28,15 @@ class Main {
         new Main();
     }
 
+    /**
+     * Set the start state of the world and run one of the algorithms depending on user input
+     */
     private Main() {
         in = new Scanner(System.in);
         while (true) {
             int choice = menu();
-            setStartState();
+            Node startNode = new Node(agentX, agentY, 0, 3, 1, 3, 2, 3, null, 0, 0);
+            startNode.drawPuzzle();
 
             Node goal = null;
             switch (choice) {
@@ -61,22 +64,6 @@ class Main {
     }
 
     /**
-     * Sets initial board state and generates the root node
-     */
-    private void setStartState() {
-        String[][] puzzle = new String[SIZE][SIZE];
-
-        //Place the tower blocks
-        puzzle[0][1] = "A";
-        puzzle[2][1] = "B";
-        puzzle[3][1] = "C";
-        //Place the agent
-        puzzle[agentY][agentX] = "*";
-
-        startNode = new Node(puzzle, agentY, agentX, null, 0);
-    }
-
-    /**
      * Displays the different search methods for the user to choose from
      * @return users menu choice
      */
@@ -101,6 +88,7 @@ class Main {
      * @param bottom The node we want to work back up the tree from
      */
     private void printTrace(Node bottom) {
+        // Keep track of the number of nodes we have drawn to output a maximum of 10
         int count = 0;
         System.out.println();
         System.out.println("The moves (working back from the goal) were: ");

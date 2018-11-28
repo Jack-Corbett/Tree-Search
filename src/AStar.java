@@ -1,24 +1,35 @@
-import java.util.Comparator;
+import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
-@SuppressWarnings("Duplicates")
+/**
+ * Implements the A* search algorithm
+ */
 class AStar extends Search {
 
     private Queue<Node> pqueue;
 
+    /**
+     * Set the root, nodes expanded to 0, instantiate the priority queue and print the name
+     * @param root node of the tree to search
+     */
     AStar(Node root) {
         initialise(root);
-        pqueue = new PriorityQueue<>(Comparator.comparingInt(this::f));
+        pqueue = new PriorityQueue<>();
         printName();
     }
 
+    /**
+     * Runs the A* algorithm
+     * @return the goal node
+     */
     @Override
     Node run() {
         // Add the root node to the queue
         pqueue.add(root);
 
         while (!pqueue.isEmpty()) {
+            ArrayList<Node> children;
             Node current = pqueue.poll();
 
             if (current.isGoal()) {
@@ -26,56 +37,27 @@ class AStar extends Search {
                 printLevel(current);
                 return current;
             }
-
+            // System.out.println("Current:");
+            // current.drawPuzzle();
             nodesExpanded++;
-            current.generateChildren();
+            children = current.generateChildren();
 
             // Add all of the children to the priority queue
-            pqueue.addAll(current.getChildren());
+            // System.out.println("Children:");
+            for (Node child : children) {
+                if (child != null) {
+                    child.heuristic();
+                    // child.drawPuzzle();
+                    pqueue.add(child);
+                }
+            }
         }
         return null;
     }
 
-    private int f(Node node) {
-        return h(node) + node.getLevel();
-    }
-
-    // Manhattan distance calculate the distance of A B and C from their goal
-    private int h(Node node) {
-        int manhattanDistance = 0;
-        String[][] puzzle = node.getPuzzle();
-        // Store the distance in the x and y directions
-        int difX;
-        int difY;
-
-        for (int x = 0; x < Main.SIZE; x++) {
-            for (int y = 0; y < Main.SIZE; y++) {
-                String value = puzzle[x][y];
-
-                if (value != null) {
-                    switch (value) {
-                        case "A":
-                            difX = x - 1;
-                            difY = y - 1;
-                            manhattanDistance += Math.abs(difX) + Math.abs(difY);
-                            break;
-                        case "B":
-                            difX = x - 2;
-                            difY = y - 1;
-                            manhattanDistance += Math.abs(difX) + Math.abs(difY);
-                            break;
-                        case "C":
-                            difX = x - 3;
-                            difY = y - 1;
-                            manhattanDistance += Math.abs(difX) + Math.abs(difY);
-                            break;
-                    }
-                }
-            }
-        }
-        return manhattanDistance;
-    }
-
+    /**
+     * Print the formatted name to the console
+     */
     @Override
     void printName() {
         super.printName();
