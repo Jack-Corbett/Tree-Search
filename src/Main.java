@@ -15,6 +15,9 @@ class Main {
     static final int By = 2;
     static final int Cx = 1;
     static final int Cy = 3;
+    // Coordinates of the mine (extension)
+    static final int Mx = 0;
+    static final int My = 0;
     // Initial agent position
     private static final int agentX = 3;
     private static final int agentY = 3;
@@ -84,11 +87,11 @@ class Main {
     }
 
     /**
-     * Prints the state of the board working up through the tree to the root to a maximum of 10
+     * Prints the state of the board working up through the tree to the root to a maximum of 15
      * @param bottom The node we want to work back up the tree from
      */
     private void printTrace(Node bottom) {
-        // Keep track of the number of nodes we have drawn to output a maximum of 10
+        // Keep track of the number of nodes we have drawn to output a maximum of 15
         int count = 0;
         System.out.println();
         System.out.println("The moves (working back from the goal) were: ");
@@ -98,7 +101,7 @@ class Main {
         Node parent;
         while (node.getParent() != null) {
             count++;
-            if (count > 10) {
+            if (count > 15) {
                 System.out.println("Only showing the first 10 moves...");
                 return;
             }

@@ -79,6 +79,8 @@ class Node implements Comparable<Node> {
                     System.out.print("C");
                 } else if (x == this.x && y == this.y) {
                     System.out.print("*");
+                } else if (x == Main.Mx && y == Main.My) {
+                    System.out.print("M");
                 } else {
                     System.out.print(" ");
                 }
@@ -112,6 +114,8 @@ class Node implements Comparable<Node> {
         int[] newPositions;
 
          if (direction == 'r' && x + 1 <= Main.SIZE - 1) {
+             // If the agent is going to step on the mine return null
+             if (x + 1 == Main.Mx && y == Main.My) return null;
              newPositions = generateNewPositions(1, 0);
              // Create the new node
              child = new Node(x + 1, y, newPositions[0], newPositions[1], newPositions[2], newPositions[3],
@@ -119,6 +123,8 @@ class Node implements Comparable<Node> {
              return child;
 
          } else if (direction == 'l' && x - 1 >= 0) {
+             // If the agent is going to step on the mine return null
+             if (x - 1 == Main.Mx && y == Main.My) return null;
              newPositions = generateNewPositions(-1, 0);
              // Create the new node
              child = new Node(x - 1, y, newPositions[0], newPositions[1], newPositions[2], newPositions[3],
@@ -126,6 +132,8 @@ class Node implements Comparable<Node> {
              return child;
 
          } else if (direction == 'u' && y - 1 >= 0) {
+             // If the agent is going to step on the mine return null
+             if (x == Main.Mx && y - 1 == Main.My) return null;
              newPositions = generateNewPositions(0, -1);
              // Create the new node
              child = new Node(x, y - 1, newPositions[0], newPositions[1], newPositions[2], newPositions[3],
@@ -133,6 +141,8 @@ class Node implements Comparable<Node> {
              return child;
 
          } else if (direction == 'd' && y + 1 <= Main.SIZE - 1) {
+             // If the agent is going to step on the mine return null
+             if (x == Main.Mx && y + 1 == Main.My) return null;
              newPositions = generateNewPositions(0, 1);
              // Create the new node
              child = new Node(x, y + 1, newPositions[0], newPositions[1], newPositions[2], newPositions[3],
